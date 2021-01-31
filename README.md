@@ -7,8 +7,7 @@ and accurately quantify the stochastic dynamics of the cell type frequencies on 
 The main part of GraphFP is performed in R, 
 
 Before using GraphFP, please install PETSc and MPI in advance. 
-The installation of MPI can be done when install PETSc. 
-The version of PETSc used in D-EE is 3.11.4 (https://www.mcs.anl.gov/petsc/download/index.html), 
-The version of PETSc used in D-EE is 3.11.4 with external package 'elemental'.
+The version of  used in GraphFP is 3.11.4, 
+The version of  used in GraphFP is 3.11.4 with external package ' '.
 
 

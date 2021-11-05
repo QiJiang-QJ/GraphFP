@@ -34,6 +34,12 @@ ActualProbs <- Estimate_Probs(Data,V(Graph)$name,Timepoints)
 ### Estimate parameters ( linear potential energy Phi & Interaction matrix W)
 lambda=rep(1000,(f-1))
 beta=1e-03
+Manual_Critical=2
+Par_step <- 1e-02/sum(lambda)*(f-1)
+Integral_step=10
+Max_iter=2000
+tol=1e-09*sum(lambda)/(f-1)
+
 initial_Phi <- rep(0,N)
 names(initial_Phi) <- CelltypeNames
 initial_W <- matrix(0,N,N)

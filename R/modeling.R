@@ -171,7 +171,7 @@ derive_dPhi_dW <- function(p,Phi,W,u1,a_dKL_dp2,lambda_i,beta){
 
 
 
-Estimate_THETA <- function(lambda,beta,initial_Phi,initial_W,Graph,probs,Manual_Critical=1,Integral_step=10,Max_iter=1000,Par_step=1e-02,tol=1e-09){
+Estimate_THETA <- function(lambda,beta,initial_Phi,initial_W,Graph,probs,Manual_Critical=2,Integral_step=10,Max_iter=2000,Par_step=1e-02,tol=1e-09){
   T1=Sys.time()
   
   Phi <- initial_Phi

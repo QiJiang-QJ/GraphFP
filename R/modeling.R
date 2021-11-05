@@ -53,14 +53,6 @@ KL_divs <- function(Pred,Actual){
   return(KLs)
 }
 
-Diag_2 <- function(A){
-  nnn <- dim(A)[1]
-  for (i in 1:nnn) {
-    A[i,i] <- A[i,i]/2
-  }
-  return(A)
-}
-
 Time_array_array <- function(a,b){
   NN_row <- length(a)
   NN_col <- length(b)
@@ -152,22 +144,25 @@ derive_u <- function(Phi,W,pred_P,beta){
 derive_dPhi_dW <- function(p,Phi,W,u1,a_dKL_dp2,lambda_i,beta){
   list_d <- list()
   Fp <- F(Phi,W,p,beta)
-  Ap <- (A %*% (p/2)) %>% as.numeric()
-  Bp <- (B %*% (p/2)) %>% as.numeric()
-  BF <- (B %*% Fp) %>% as.numeric()
-  BApB <- (t(B)) %*% (Ap * B)
-  BBpBFB <- (t(B)) %*% (as.numeric(Bp * (sign(BF)) ) * B)
+  D1 <- (A1 %*% (p/2)) %>% as.numeric()
+  D2 <- (A2 %*% (p/2)) %>% as.numeric()
+  A2F <- (A2 %*% Fp) %>% as.numeric()
+  D3 <- sign(A2F)
+  ADA <- (t(A2)) %*% (D1 * A2)
+  ADDA <- (t(A2)) %*% (as.numeric(D2 * D3) * A2)
+  A2Fp1 <- Time_array_array(A2F,p)
+  A2Fp2 <- Time_array_array(abs(A2F),p)
   ula <- (u1 -lambda_i*a_dKL_dp2) %>% as.numeric()
-  dPhi <- as.numeric(as.numeric(BF * Ap) %*% B)+as.numeric(as.numeric(abs(BF) * Bp) %*% B)+as.numeric(ula %*% (BApB + BBpBFB))
+  dPhi <- as.numeric(as.numeric(A2F * D1) %*% A2)+as.numeric(as.numeric(abs(A2F) * D2) %*% A2)+as.numeric(ula %*% (ADA + ADDA))
   
-  BApBFp <- t(B) %*% (Ap * (Time_array_array(BF,p)) )
-  BBpBFp <- t(B) %*% (Bp * (Time_array_array(abs(BF),p)) )
-  dW1 <- Diag_2(BApBFp+t(BApBFp)) + Diag_2(BBpBFp+t(BBpBFp))
+  ADDAFp1 <- t(A2) %*% (D1 * A2Fp1)
+  ADDAFp2 <- t(A2) %*% (D2 * A2Fp2)
+  dW1 <- (ADDAFp1 + ADDAFp2)
   dW2 <- matrix(0,ncol = length(Phi),nrow = length(Phi))
   for (k in 1:length(Phi)) {
-    BApBp <- Time_array_array(as.numeric(BApB[k,]),p)
-    BBpBFBp <- Time_array_array(as.numeric(BBpBFB[k,]),p)
-    dW2 <- dW2 + ula[k]*(Diag_2(BApBp + t(BApBp) + BBpBFBp + t(BBpBFBp)))
+    ADAp <- Time_array_array(as.numeric(ADA[k,]),p)
+    ADDAp <- Time_array_array(as.numeric(ADDA[k,]),p)
+    dW2 <- dW2 + ula[k]*((ADAp + ADDAp))
   }
   dW <- (dW1+dW2)
   list_d <- list(dPhi=dPhi,dW=dW)

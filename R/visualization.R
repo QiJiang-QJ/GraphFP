@@ -64,7 +64,7 @@ F <- function(Phi,W,p,beta){
   return(bigf)
 }
 
-Solve_p <- function(Phi,W,init_p,init_t,t,Edgelist){
+Solve_p <- function(Phi,W,init_p,init_t,t,Edgelist,Integral_step=10){
   p <- init_p
   critical <- (1/(length(p)-1))/Manual_Critical
   delta_t <- 1/Integral_step
@@ -222,7 +222,7 @@ Plot_FreeEnergy <- function(Phi,W,Times){
 }
 
 
-DeriveEdgeflow <- function(Phi,W,Timepoints,P1){
+DeriveEdgeflow <- function(Phi,W,Timepoints,P1,Integral_step=10){
     critical <- (1/(length(P1)-1))/Manual_Critical
   
     initial_t <- Timepoints[1]
@@ -373,7 +373,7 @@ Plot_EdgeFlow7 <- function(Phi,W,Timepoints,labels,main){
   Net3[1:7,8:14] <- netS[[1]]
   Net3[8:14,15:21] <- netS[[2]]
   Net3[15:21,22:28] <- netS[[3]]
-  row.names(Net3) <- rep(colnames(net1),f)
+  row.names(Net3) <- rep(colnames(netS[[1]]),f)
   colnames(Net3) <- row.names(Net3)
   
   vertex.weight <- c()
@@ -409,8 +409,8 @@ Plot_EdgeFlow7 <- function(Phi,W,Timepoints,labels,main){
   V(g)$frame.font <- 5
   V(g)$label.color <- 'black'
   E(g)$width<- E(g)$weight/max(E(g)$weight)*12
-  E(g)$arrow.width<-300*E(g)$width/max(E(g)$width)
-  E(g)$arrow.size<-200*E(g)$width/max(E(g)$width)
+  E(g)$arrow.width<-30*E(g)$width/max(E(g)$width)
+  E(g)$arrow.size<-20*E(g)$width/max(E(g)$width)
   E(g)$label.color<-'black'
   E(g)$label.cex<-2
   E(g)$color<-adjustcolor(V(g)$color[edge.start[,1]],0.6)
@@ -423,7 +423,8 @@ Plot_EdgeFlow7 <- function(Phi,W,Timepoints,labels,main){
   par(pin=c(1,1),mai=c(1,1,1,1))
   par(mar=c(4,4,4,4))
   plot(g,vertex.label=c(labels,rep(NA,14),labels),vertex.label.cex=1.2,edge.curved=0,layout=coords,margin=0.2,vertex.shape="fcircle", vertex.frame.width = rep(1,28),
-       vertex.label.degree=label.locs, vertex.label.dist=label.dist, vertex.label.family="Helvetica",main = main,cex.main=10)
+       vertex.label.degree=label.locs, vertex.label.dist=label.dist, vertex.label.family="Helvetica",main = main,cex.main=10,edge.arrow.size=0)
   text(text.pos, c("E11.5","E13.5",'E15.5','E17.5'), cex = 1.5, col = rep("#c51b7d",4))
 }
+
 

@@ -170,7 +170,22 @@ derive_dPhi_dW <- function(p,Phi,W,u1,a_dKL_dp2,lambda_i,beta){
 }
 
 
-sgn <- function(X){
+sgn_Phi <- function(X){
+  n <- length(X)
+  Y <- rep(0,n)
+  for (i in 1:n) {
+      if(X[i]>0){
+        Y[i]=1
+      }else if(X[i]<0){
+        Y[i]=-1
+      }else{
+        Y[i]=0
+      }
+  }
+  return(Y)
+}
+
+sgn_W <- function(X){
   n <- dim(X)[1]
   Y <- matrix(0,ncol=n,nrow=n)
   for (i in 1:n) {
@@ -182,7 +197,6 @@ sgn <- function(X){
       }else{
         Y[i,j]=0
       }
-      
     }
   }
   return(Y)
@@ -524,8 +538,8 @@ Estimate_THETA_regularization <- function(lambda,beta,initial_Phi,initial_W,Grap
         }
       }
     }
-    delta_Phi <- delta_Phi+alpha*sgn(Phi)
-    delta_W <- delta_W+alpha*sgn(W)
+    delta_Phi <- delta_Phi+alpha*sgn_Phi(Phi)
+    delta_W <- delta_W+alpha*sgn_W(W)
     new_Phi <- Phi - delta_Phi*pars_step
     new_W <- W - delta_W*pars_step
     new_LLoss <- derive_loss(new_Phi,new_W,Timepoints)

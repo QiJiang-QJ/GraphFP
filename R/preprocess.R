@@ -1,34 +1,30 @@
 library('igraph')
 library('RColorBrewer')
 
-Plot_DataWithLabels <- function(Data){
+Plot_DataWithLabels <- function(Data,N=7){
   Colors <- brewer.pal(n = N, name = "Set3")
-  Colors[2] <- heat.colors(10)[8]
+  # Colors[2] <- heat.colors(10)[8]
   
   label <- Data$celltype
   label <- as.character(label)
-  centers <- matrix(0,7,2)
+  centers <- matrix(0,N,2)
   for(i in 1:N){
     Clusters <- Data[which(label==i),]
     Clusters <- Clusters[,c(3:4)]
     centers[i,] <- apply(Clusters,2,mean)
   }
+  reference <- seq(N)
   for(i in 1:length(label)){
-    if(label[i]==1){label[i] <- Colors[1]}
-    if(label[i]==2){label[i] <- Colors[2]}
-    if(label[i]==3){label[i] <- Colors[3]}
-    if(label[i]==4){label[i] <- Colors[4]}
-    if(label[i]==5){label[i] <- Colors[5]}
-    if(label[i]==6){label[i] <- Colors[6]}
-    if(label[i]==7){label[i] <- Colors[7]}
+    indexx <- which(reference == label[i])[[1]]
+    label[i] <- Colors[indexx]
   }
   par(mfrow=c(1,1))
   par(pin=c(1,1),mai=c(1,1,1,1))
   plot(Data[,3],Data[,4],col=label,pch=20,cex=1,xlab = 'tSNE_1',ylab='tSNE_2',cex.lab=1.8)
-  for(i in 1:7){
+  for(i in 1:N){
     x=centers[i,1]
     y=centers[i,2]
-    text(x,y,CelltypeNames[i],font = 2,cex=1.3)
+    text(x,y,CelltypeNames[i],font = 2,cex=0.9)
   }
 }
 
@@ -73,8 +69,13 @@ Estimate_Probs <- function(data,orders,times){
     OrderProb <- Prob
     k <- 1
     for (j in orders) {
-      OrderProb[k] <- Prob[j]
-      k <- k+1
+      if (is.na(Prob[j])) {
+          OrderProb[k] <- 0
+          k <- k+1
+      } else{
+          OrderProb[k] <- Prob[j]
+          k <- k+1
+      }
     }
     actualProbs[i,] <- OrderProb
   }
@@ -82,3 +83,4 @@ Estimate_Probs <- function(data,orders,times){
   rownames(actualProbs) <- times
   return(actualProbs)
 }
+

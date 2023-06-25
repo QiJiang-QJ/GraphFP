@@ -24,7 +24,7 @@ Plot_DataWithLabels <- function(Data,N=7){
   for(i in 1:N){
     x=centers[i,1]
     y=centers[i,2]
-    text(x,y,CelltypeNames[i],font = 2,cex=0.9)
+    text(x,y,CelltypeNames[i],font = 2,cex=1.3)
   }
 }
 

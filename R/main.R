@@ -10,7 +10,7 @@ CelltypeNames <- c('1-Neurons','2-Young Neurons','3-APs/RPs','4-IPs','5-APs/RPs'
 Timepoints <- sort(unique(Data$timepoint))
 f <- length(Timepoints)
 N <- length(CelltypeNames)
-Plot_DataWithLabels(Data)
+Plot_DataWithLabels(Data,N)
 
 
 #### Define Transition Graph (Complete Graph)

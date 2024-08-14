@@ -23,8 +23,8 @@ num_E <- length(E(Graph))
 ### compute D & A & B
 Edgelist <- get.edgelist(Graph)
 D <- rep(1,num_E)
-A1 <- get_incidentMatrix(Edgelist,V(Graph)$name)
-A2 <- get_incidentMatrix_D(A1)
+A <- get_incidentMatrix(Edgelist,V(Graph)$name)
+B <- get_incidentMatrix_D(A)
 
 
 ### Estimate probablities at t1...tf
